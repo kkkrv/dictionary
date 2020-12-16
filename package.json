@@ -1,0 +1,13 @@
+{
+  "name": "dictionary",
+  "version": "1.0",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=13.8.0"
+  },
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT"
+}
