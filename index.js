@@ -64,7 +64,7 @@ var loadDictionary = (file, callback) => {
     })
 };
 
-downloadDictionary('https://raw.githubusercontent.com/adambom/dictionary/master/dictionary.json', 'dictionary.json', (err) => {
+downloadDictionary('https://raw.githubusercontent.com/kkkrv/dictionary/main/dictionary.json', 'dictionary.json', (err) => {
     if (err) {
         console.log(err);
         return;
