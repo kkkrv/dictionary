@@ -1,16 +1,16 @@
-var fs = require('fs');
-var http = require('http');
-var https = require('https');
-var url = require('url');
+import http from "http";
+import fs from "fs";
+import https from "https";
+import url from "url";
 
-var dictionary = null;
+let dictionary = null;
 
-var dictionaryHandler = (request, response) => {
-    var u = url.parse(request.url);
-    
+const dictionaryHandler = (request, response) => {
+    let u = url.parse(request.url);
+
     response.setHeader('Content-Type', 'text/plain;charset=utf-8');
 
-    if (u.pathname == '/readyz') {
+    if (u.pathname === '/readyz') {
         if (dictionary) {
             response.writeHead(200);
             response.end('OK');
@@ -23,9 +23,9 @@ var dictionaryHandler = (request, response) => {
 
     let key = '';
     let decodedPath = decodeURI(u.pathname.substr(1));
-    
+
     if (u.pathname.length > 0) {
-        key = decodedPath.toUpperCase(); 
+        key = decodedPath.toUpperCase();
     }
     var def = dictionary[key];
     if (!def) {
@@ -35,23 +35,23 @@ var dictionaryHandler = (request, response) => {
     }
     response.writeHead(200);
     response.end(def);
-}
-
-var downloadDictionary = (url, file, callback) => {
-  var stream = fs.createWriteStream(file);
-  var req = https.get(url, function(res) {
-    res.pipe(stream);
-    stream.on('finish', function() {
-      stream.close(callback);
-      console.log('dictionary downloaded');
-    });
-  }).on('error', function(err) {
-    fs.unlink(file);
-    if (callback) cb(err.message);
-  });
 };
 
-var loadDictionary = (file, callback) => {
+const downloadDictionary = (url, file, callback) => {
+    let stream = fs.createWriteStream(file);
+    let req = https.get(url, function (res) {
+        res.pipe(stream);
+        stream.on('finish', function () {
+            stream.close(callback);
+            console.log('dictionary downloaded');
+        });
+    }).on('error', function (err) {
+        fs.unlink(file);
+        if (callback) cb(err.message);
+    });
+};
+
+let loadDictionary = (file, callback) => {
     fs.readFile(file, (err, data) => {
         if (err) {
             console.log(err);
@@ -80,10 +80,10 @@ downloadDictionary('https://raw.githubusercontent.com/kkkrv/dictionary/main/dict
 
 const server = http.createServer(dictionaryHandler);
 
-server.listen(8080, (err) => {  
+server.listen(process.env.PORT ?? 4321, (err) => {
   if (err) {
     return console.log('error starting server: ' + err);
   }
 
-  console.log('server is listening on 8080');
+  console.log('server is listening on ' + process.env.PORT);
 });
