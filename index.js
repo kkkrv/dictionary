@@ -80,10 +80,10 @@ downloadDictionary('https://raw.githubusercontent.com/kkkrv/dictionary/main/dict
 
 const server = http.createServer(dictionaryHandler);
 
-server.listen(process.env.PORT ?? 4321, (err) => {
+server.listen(8080, (err) => {
   if (err) {
     return console.log('error starting server: ' + err);
   }
 
-  console.log('server is listening on ' + process.env.PORT);
+  console.log('server is listening on 8080');
 });
