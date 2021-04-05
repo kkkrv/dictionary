@@ -1,14 +1,11 @@
-import http from "http";
-import fs from "fs";
-import https from "https";
-import url from "url";
-
-let dictionary = null;
+const http = require("http");
+const url = require("url");
+const dictionary = require("./dictionary.json")
 
 const dictionaryHandler = (request, response) => {
     let u = url.parse(request.url);
 
-    response.setHeader('Content-Type', 'text/plain;charset=utf-8');
+    response.setHeader('Content-Type', 'application/json;charset=utf-8');
 
     if (u.pathname === '/readyz') {
         if (dictionary) {
@@ -24,66 +21,41 @@ const dictionaryHandler = (request, response) => {
     let key = '';
     let decodedPath = decodeURI(u.pathname.substr(1));
 
-    if (u.pathname.length > 0) {
+    if (decodedPath.length > 0) {
         key = decodedPath.toUpperCase();
+    } else {
+        let error = {
+            error: 'No input'
+        }
+        response.writeHead('422');
+        response.end(JSON.stringify(error));
+        return;
     }
-    var def = dictionary[key];
+    let def = dictionary[key];
     if (!def) {
         response.writeHead(404);
-        response.end(key + ' was not found');
+        let error = {
+            error: key + " was not found"
+        }
+        response.end(JSON.stringify(error));
         return;
+    }
+    let definition = {
+        term: key,
+        definition: def
     }
     response.writeHead(200);
-    response.end(def);
+    response.end(JSON.stringify(definition));
 };
 
-const downloadDictionary = (url, file, callback) => {
-    let stream = fs.createWriteStream(file);
-    let req = https.get(url, function (res) {
-        res.pipe(stream);
-        stream.on('finish', function () {
-            stream.close(callback);
-            console.log('dictionary downloaded');
-        });
-    }).on('error', function (err) {
-        fs.unlink(file);
-        if (callback) cb(err.message);
+const app = http.createServer(dictionaryHandler);
+
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(9000, (err) => {
+        if (err) return console.log('error starting server: ' + err);
+        console.log('server is listening on 9000');
     });
-};
+}
 
-let loadDictionary = (file, callback) => {
-    fs.readFile(file, (err, data) => {
-        if (err) {
-            console.log(err);
-            callback(err);
-            return;
-        }
-        dictionary = JSON.parse(data);
-        console.log('dictionary loaded.');
-        callback();
-    })
-};
 
-downloadDictionary('https://raw.githubusercontent.com/kkkrv/dictionary/main/dictionary.json', 'dictionary.json', (err) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    loadDictionary('dictionary.json', (err) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log('ready to serve');
-    });
-});
-
-const server = http.createServer(dictionaryHandler);
-
-server.listen(8080, (err) => {
-  if (err) {
-    return console.log('error starting server: ' + err);
-  }
-
-  console.log('server is listening on 8080');
-});
+module.exports = app;
