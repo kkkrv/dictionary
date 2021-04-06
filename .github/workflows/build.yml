@@ -39,8 +39,9 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "kokkareva-web-api"
-          heroku_email: "olgakokkareva08055@gmail.com"
+          heroku_app_name: 'kokkareva-web-api'
+          heroku_email: 'olgakokkareva08055@gmail.com'
           usedocker: true
-          healthcheck: "https://kokkareva-web-api.herokuapp.com/readyz"
-          checkstring: "OK"
+          delay: 5
+          healthcheck: 'https://kokkareva-web-api.herokuapp.com/readyz'
+          checkstring: 'OK'
