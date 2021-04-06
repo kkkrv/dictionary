@@ -12,5 +12,4 @@ jobs:
       - uses: stefanoeb/eslint-action@1.0.2
         with:
           files: index.js
-      - run: npm install
       - run: npm test
