@@ -22,7 +22,7 @@ describe('Search for definition', () => {
   });
 
   test('[Negative] Get not existing definition (GET /Architecture)', async () => {
-    const term = encodeURI('backend');
+    const term = encodeURI('Architecture');
     const response = await request(app).get(`/${term}`);
     expect(response.statusCode).toBe(404);
     expect(response.body.error).toBe(`${term.toUpperCase()} was not found`);
