@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 9000
 
+EXPOSE $PORT
+
 CMD [ "node", "index.js" ]

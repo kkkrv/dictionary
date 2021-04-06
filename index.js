@@ -51,9 +51,8 @@ const dictionaryHandler = (request, response) => {
 const app = http.createServer(dictionaryHandler);
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(9000, (err) => {
+  app.listen(process.env.PORT ?? 9000, (err) => {
     if (err) return console.log(`error starting server: ${err}`);
-    console.log('server is listening on 9000');
   });
 }
 

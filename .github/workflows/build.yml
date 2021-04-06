@@ -33,7 +33,7 @@ jobs:
   deploy:
     name: Deploy to Heroku
     runs-on: ubuntu-latest
-    needs: eslint-and-tests
+    needs: [eslint-and-tests, push_to_registry]
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
