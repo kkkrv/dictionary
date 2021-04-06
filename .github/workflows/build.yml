@@ -1,14 +1,7 @@
 on: push
 
 jobs:
-  eslint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
-        with:
-          files: index.js
-  tests:
+  eslint-and-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,5 +9,8 @@ jobs:
         with:
           node-version: '14'
           check-latest: true
+      - uses: stefanoeb/eslint-action@1.0.2
+        with:
+          files: index.js
       - run: npm install
       - run: npm test
