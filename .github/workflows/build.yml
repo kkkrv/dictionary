@@ -10,6 +10,5 @@ jobs:
           node-version: '14'
           check-latest: true
       - run: npm install
+      - run: eslint index.js
       - run: npm test
-      - name: Run ESLint
-        run: eslint index.js
